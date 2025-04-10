@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Pedido Especial</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+        body {
+            background-image: url('https://i.imgur.com/SOF9MV3_d.webp?maxwidth=1520&fidelity=grand');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: black;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 0 60px 30px rgba(255, 0, 0, 0.4) inset;
+        }
+
+        h1 {
+            font-family: 'Great Vibes', cursive;
+            color: #ffc0cb;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 25px 40px;
+            border-radius: 12px;
+            font-size: 42px;
+            margin-bottom: 40px;
+            max-width: 90%;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 80px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        button {
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            font-size: 60px;
+            color: red;
+            cursor: pointer;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.2s;
+            position: relative;
+        }
+
+        button:hover {
+            transform: scale(1.2);
+        }
+
+        button span {
+            position: absolute;
+            font-size: 16px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .coraçao {
+            position: fixed;
+            font-size: 24px;
+            animation: flutuar 4s linear infinite;
+            color: red;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        @keyframes flutuar {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-300px, -1000px) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .luz-romantica {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .coraçao-de-fundo {
+            position: absolute;
+            color: rgba(255, 0, 0, 0.3);
+            font-size: 30px;
+            animation: girar 20s linear infinite;
+        }
+
+        @keyframes girar {
+            0% {
+                transform: rotate(0deg) translateX(100px) rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg) translateX(100px) rotate(-360deg);
+            }
+        }
+
+        .youtube-player {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+    <h1>Fica comigo pra sempre?</h1>
+    <div class="buttons">
+        <button id="sim" onclick="respostaSim()">❤<span>Sim</span></button>
+        <button id="nao" onmouseover="fugir()" onclick="fugir()">❤<span>Não</span></button>
+    </div>
+
+    <div class="luz-romantica" id="luz-romantica"></div>
+
+    <div class="youtube-player">
+        <iframe width="300" height="150" src="https://www.youtube.com/embed/bKnT6GMBp74?autoplay=1&loop=1&playlist=bKnT6GMBp74" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
+
+    <script>
+        function respostaSim() {
+            for (let i = 0; i < 300; i++) {
+                criarCoraçao();
+            }
+            alert("Ebaa, te amo mor!");
+        }
+
+        function criarCoraçao() {
+            const cora = document.createElement("div");
+            cora.classList.add("coraçao");
+            cora.innerHTML = "❤";
+            cora.style.left = Math.random() * 100 + "vw";
+            cora.style.top = Math.random() * 100 + "vh";
+            cora.style.fontSize = Math.random() * 30 + 20 + "px";
+            document.body.appendChild(cora);
+
+            setTimeout(() => {
+                cora.remove();
+            }, 4000);
+        }
+
+        function fugir() {
+            const botaoNao = document.getElementById("nao");
+            const botaoSim = document.getElementById("sim");
+
+            const simRect = botaoSim.getBoundingClientRect();
+            const naoWidth = botaoNao.offsetWidth;
+            const naoHeight = botaoNao.offsetHeight;
+            const distanciaMinima = 120;
+
+            const imgWidth = 1520;
+            const imgHeight = 857;
+            const winWidth = window.innerWidth;
+            const winHeight = window.innerHeight;
+            let fundoWidth, fundoHeight;
+
+            if (winWidth / winHeight < imgWidth / imgHeight) {
+                fundoWidth = winWidth;
+                fundoHeight = winWidth * imgHeight / imgWidth;
+            } else {
+                fundoHeight = winHeight;
+                fundoWidth = winHeight * imgWidth / imgHeight;
+            }
+
+            const offsetX = (winWidth - fundoWidth) / 2;
+            const offsetY = (winHeight - fundoHeight) / 2;
+
+            let novaPosX, novaPosY, distancia;
+
+            do {
+                novaPosX = offsetX + Math.random() * (fundoWidth - naoWidth);
+                novaPosY = offsetY + Math.random() * (fundoHeight - naoHeight);
+
+                const simX = simRect.left + simRect.width / 2;
+                const simY = simRect.top + simRect.height / 2;
+                const naoX = novaPosX + naoWidth / 2;
+                const naoY = novaPosY + naoHeight / 2;
+
+                distancia = Math.hypot(simX - naoX, simY - naoY);
+            } while (distancia < distanciaMinima);
+
+            botaoNao.style.position = 'fixed';
+            botaoNao.style.left = `${novaPosX}px`;
+            botaoNao.style.top = `${novaPosY}px`;
+        }
+
+        const fundo = document.getElementById('luz-romantica');
+        for (let i = 0; i < 30; i++) {
+            const cora = document.createElement('div');
+            cora.classList.add('coraçao-de-fundo');
+            cora.innerHTML = '❤';
+            cora.style.left = Math.random() * 100 + '%';
+            cora.style.top = Math.random() * 100 + '%';
+            cora.style.fontSize = Math.random() * 20 + 20 + 'px';
+            fundo.appendChild(cora);
+        }
+    </script>
+</body>
+</html>
